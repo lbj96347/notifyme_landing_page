@@ -1,0 +1,304 @@
+@import "tailwindcss";
+
+/*
+ * NotifyMe retro handheld-pager / LCD theme.
+ *
+ * Grounded in the app icon (public/notifyme-icon.png): a charcoal pager
+ * casing with an olive-green LCD, a red indicator light, chunky buttons,
+ * and a warm amber glow leaking in from the top-left corner.
+ *
+ * Tokens are exposed as Tailwind v4 utilities via @theme (e.g. bg-casing,
+ * text-lcd, border-alert, text-amber). Reusable surface treatments
+ * (panels, glow, texture) live as component utilities below so sections
+ * can stay consistent without re-deriving shadows/gradients each time.
+ */
+@theme {
+  /* Casing — charcoal device body */
+  --color-casing: #1f2328;
+  --color-casing-light: #2b2f35;
+  --color-casing-edge: #14171b;
+
+  /* LCD — olive/green pager screen */
+  --color-lcd: #c8d99a;
+  --color-lcd-dim: #aebe7d;
+  --color-lcd-screen: #a9b985;
+
+  /* Alert — red/orange indicator light */
+  --color-alert: #ef3b1f;
+
+  /* Amber — warm corner glow accent */
+  --color-amber: #c9824d;
+
+  /* Backgrounds — deep graphite */
+  --color-graphite: #15181c;
+  --color-graphite-deep: #101317;
+
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Cascadia Code",
+    "Roboto Mono", monospace;
+
+  /* Shared retro surface shadows */
+  --shadow-panel: 0 1px 0 #3a3f47, 0 -1px 0 #0d0f12, 0 12px 28px -12px #000;
+  --shadow-inset-lcd: inset 0 2px 6px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.4);
+  --glow-amber: 0 0 60px -10px rgba(201, 130, 77, 0.55);
+  --glow-alert: 0 0 10px var(--color-alert);
+}
+
+:root {
+  --background: #15181c;
+  --foreground: #c8d99a;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Offset in-page anchors so the sticky header doesn't cover them */
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  /* Subtle graphite texture: fine diagonal noise + soft top-left amber glow */
+  background-image:
+    radial-gradient(
+      120% 80% at 0% 0%,
+      rgba(201, 130, 77, 0.1) 0%,
+      rgba(201, 130, 77, 0) 45%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.012) 0px,
+      rgba(255, 255, 255, 0.012) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  background-attachment: fixed;
+}
+
+@layer components {
+  /* Chunky charcoal panel — the raised device-casing surface */
+  .panel {
+    background: linear-gradient(
+      180deg,
+      var(--color-casing-light) 0%,
+      var(--color-casing) 100%
+    );
+    border: 2px solid var(--color-casing-edge);
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-panel);
+  }
+
+  /* Inset LCD screen — recessed olive panel like the pager display */
+  .lcd-panel {
+    background: linear-gradient(
+      180deg,
+      var(--color-lcd-screen) 0%,
+      var(--color-lcd-dim) 100%
+    );
+    color: var(--color-graphite-deep);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-inset-lcd);
+  }
+
+  /* Terminal/code surface — deep graphite with chunky border */
+  .terminal {
+    background: var(--color-graphite-deep);
+    border: 2px solid var(--color-casing-light);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-inset-lcd);
+  }
+
+  /* Small red indicator light, matching the icon's LCD dot */
+  .indicator {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 9999px;
+    background: var(--color-alert);
+    box-shadow: var(--glow-alert);
+  }
+
+  /* Warm amber corner glow, layered behind hero content */
+  .amber-glow {
+    box-shadow: var(--glow-amber);
+  }
+
+  /* Chunky pager button — primary call to action */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.15rem;
+    border-radius: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 2px solid var(--color-casing-edge);
+    transition:
+      transform 0.08s ease,
+      box-shadow 0.12s ease,
+      background 0.12s ease;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .btn-primary {
+    background: linear-gradient(
+      180deg,
+      var(--color-lcd) 0%,
+      var(--color-lcd-dim) 100%
+    );
+    color: var(--color-graphite-deep);
+    box-shadow:
+      0 2px 0 #7d8a52,
+      0 8px 18px -8px rgba(0, 0, 0, 0.8);
+  }
+  .btn-primary:hover {
+    box-shadow:
+      0 2px 0 #7d8a52,
+      0 0 22px -4px rgba(200, 217, 154, 0.55);
+  }
+
+  .btn-ghost {
+    background: linear-gradient(
+      180deg,
+      var(--color-casing-light) 0%,
+      var(--color-casing) 100%
+    );
+    color: var(--color-lcd);
+    box-shadow: var(--shadow-panel);
+  }
+  .btn-ghost:hover {
+    color: var(--color-amber);
+    border-color: var(--color-amber);
+  }
+
+  /* Section kicker — small uppercase label above headings */
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-amber);
+  }
+
+  /* Pixel-edged chip / tag */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    border-radius: 0.3rem;
+    border: 1px solid var(--color-casing-light);
+    background: var(--color-graphite-deep);
+    color: var(--color-lcd-dim);
+  }
+
+  /* Hairline divider tinted to the casing */
+  .rule {
+    border: 0;
+    border-top: 1px solid var(--color-casing-light);
+  }
+
+  /* Status dots reused across examples / use cases */
+  .dot {
+    display: inline-block;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 9999px;
+  }
+  .dot-success {
+    background: #aebe7d;
+    box-shadow: 0 0 8px rgba(174, 190, 125, 0.7);
+  }
+  .dot-error {
+    background: var(--color-alert);
+    box-shadow: var(--glow-alert);
+  }
+  .dot-warning {
+    background: #d8a23d;
+    box-shadow: 0 0 8px rgba(216, 162, 61, 0.7);
+  }
+  .dot-info {
+    background: #6fa8c7;
+    box-shadow: 0 0 8px rgba(111, 168, 199, 0.7);
+  }
+
+  /* Prose styling for MDX blog posts */
+  .prose {
+    color: var(--color-lcd-dim);
+    line-height: 1.75;
+  }
+  .prose h2 {
+    color: var(--color-lcd);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 2.25rem 0 0.9rem;
+  }
+  .prose h3 {
+    color: var(--color-lcd);
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 1.75rem 0 0.6rem;
+  }
+  .prose p {
+    margin: 0.9rem 0;
+  }
+  .prose a {
+    color: var(--color-amber);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose ul,
+  .prose ol {
+    margin: 0.9rem 0;
+    padding-left: 1.4rem;
+  }
+  .prose li {
+    margin: 0.4rem 0;
+  }
+  .prose li::marker {
+    color: var(--color-amber);
+  }
+  .prose strong {
+    color: var(--color-lcd);
+  }
+  .prose code {
+    background: var(--color-graphite-deep);
+    border: 1px solid var(--color-casing-light);
+    border-radius: 0.3rem;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.85em;
+    color: var(--color-amber);
+  }
+  .prose pre {
+    background: var(--color-graphite-deep);
+    border: 2px solid var(--color-casing-light);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-inset-lcd);
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1.25rem 0;
+  }
+  .prose pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--color-lcd);
+  }
+  .prose blockquote {
+    border-left: 3px solid var(--color-amber);
+    padding-left: 1rem;
+    margin: 1.25rem 0;
+    color: var(--color-lcd);
+  }
+}

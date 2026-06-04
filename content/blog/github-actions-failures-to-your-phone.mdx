@@ -1,0 +1,44 @@
+---
+title: "Send GitHub Actions failures to your phone"
+description: "Add a conditional notify step to any workflow so a broken build reaches your phone before your teammates do."
+date: "2026-05-21"
+tag: "GitHub Actions"
+---
+
+A red build is only useful if you notice it. Email digests get filtered, and the
+Actions tab isn't something you refresh all day. With NotifyMe, a failed
+workflow becomes an instant, color-coded push.
+
+## Store your webhook URL as a secret
+
+In your repository settings, add a secret named `NOTIFYME_URL` with your
+personal webhook endpoint. Never hardcode it into the workflow file.
+
+## Add a failure-only notify step
+
+The `if: failure()` condition means this step only runs when something earlier
+broke:
+
+```yaml
+- name: Notify on failure
+  if: failure()
+  run: |
+    curl -X POST "${{ secrets.NOTIFYME_URL }}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "title": "CI failed",
+        "message": "${{ github.workflow }} on ${{ github.ref_name }}",
+        "category": "github",
+        "status": "error",
+        "url": "${{ github.event.repository.html_url }}/actions"
+      }'
+```
+
+## Tap straight to the logs
+
+Because the payload includes a `url`, the notification is tappable — it opens
+the Actions tab so you can read the logs without hunting for the repo. The red
+**error** status makes it unmistakable in your inbox.
+
+You can mirror the same step with `if: success()` and `status: "success"` if you
+also want green confirmations for deploys.

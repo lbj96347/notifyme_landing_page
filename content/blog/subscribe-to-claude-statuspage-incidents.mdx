@@ -1,0 +1,41 @@
+---
+title: "Subscribe to Claude Statuspage incidents with NotifyMe"
+description: "Point a Statuspage webhook at NotifyMe and get phone pushes when the services you depend on have an incident."
+date: "2026-05-07"
+tag: "Statuspage"
+---
+
+When the Claude API (or any service you rely on) has an incident, you want to
+know before your users tell you. NotifyMe understands Atlassian Statuspage
+webhooks natively — no glue code required.
+
+## Add a Statuspage webhook subscription
+
+In the Statuspage you want to follow, add a webhook subscription pointing at
+your personal NotifyMe URL:
+
+```text
+https://us-central1-YOUR_PROJECT.cloudfunctions.net/webhook/YOUR_TOKEN
+```
+
+## NotifyMe normalizes the payload
+
+Statuspage sends a nested JSON structure that doesn't match the flat NotifyMe
+contract. The Cloud Function detects these payloads and rewrites them into the
+standard shape **before** validation — so the incident name, status, and a link
+back to the status page all arrive correctly mapped:
+
+```json
+{
+  "title": "Anthropic",
+  "message": "Elevated errors on the Claude API",
+  "category": "statuspage",
+  "status": "warning"
+}
+```
+
+## A calmer way to watch your dependencies
+
+Incidents land as warning-colored pushes in your inbox, grouped under the
+`statuspage` category. No inbox rules, no dashboards to keep open — just a
+notification when something you depend on changes state.

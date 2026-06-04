@@ -1,0 +1,47 @@
+---
+title: "Notify me when Claude Code finishes a task"
+description: "Fire a phone notification from a Claude Code Stop hook so you can step away from the terminal during long agent runs."
+date: "2026-05-28"
+tag: "Claude Code"
+---
+
+Long Claude Code runs are exactly the kind of job you shouldn't have to babysit.
+You kick off a refactor or a migration, and then you sit there watching the
+terminal scroll. NotifyMe turns that into a single phone push the moment the
+agent stops.
+
+## Set your webhook URL
+
+Grab your personal webhook URL from the NotifyMe app and export it:
+
+```bash
+export NOTIFYME_URL="https://us-central1-YOUR_PROJECT.cloudfunctions.net/webhook/YOUR_TOKEN"
+```
+
+## Add a Stop hook
+
+Claude Code runs hooks at lifecycle events. The `Stop` hook fires when a run
+finishes, which is the perfect place to send a notification. Add this to your
+`.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "Stop": [{
+      "hooks": [{
+        "type": "command",
+        "command": "curl -s -X POST \"$NOTIFYME_URL\" -d '{\"title\":\"Claude Code\",\"message\":\"Task finished\",\"category\":\"claude\",\"status\":\"success\"}'"
+      }]
+    }]
+  }
+}
+```
+
+## What you get
+
+A push lands on your phone with a green **success** status, filed under the
+`claude` category in your inbox. Tap it to open the detail. Now you can start a
+job, lock your phone, and trust that it'll reach you when it's done.
+
+> Tip: set `status` to `error` and add a `url` field pointing at your repo if you
+> want failure pushes to deep-link straight to the run.

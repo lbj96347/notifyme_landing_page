@@ -1,0 +1,39 @@
+---
+title: "Using NotifyMe with n8n workflows"
+description: "Drop an HTTP Request node at the end of any n8n workflow to push a completion notification with live execution data."
+date: "2026-05-14"
+tag: "n8n"
+---
+
+n8n is great at running automations on a schedule — and terrible at telling you
+they ran. A final HTTP Request node fixes that: every workflow can end with a
+phone push that includes its own results.
+
+## Add an HTTP Request node
+
+At the end of your workflow, add an **HTTP Request** node:
+
+- **Method:** `POST`
+- **URL:** `{{ $env.NOTIFYME_URL }}` (set `NOTIFYME_URL` in your n8n environment)
+- **Body Content Type:** JSON
+
+## Build the payload
+
+n8n expressions let you pull data straight from the run into the notification:
+
+```json
+{
+  "title": "Workflow complete",
+  "message": "{{ $workflow.name }} processed {{ $json.count }} items",
+  "category": "n8n",
+  "status": "success",
+  "url": "{{ $execution.url }}"
+}
+```
+
+## Why this beats email nodes
+
+The push is lightweight and color-coded, the `url` deep-links back to the exact
+execution in your n8n instance, and everything stays in your own Firebase
+project. Add a second node on the error branch with `status: "error"` to catch
+failures too.
