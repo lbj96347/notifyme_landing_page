@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, SOCIAL_IMAGE } from "@/lib/site";
 import "./globals.css";
 
 const TITLE = "NotifyMe — Webhook notifications, straight to your phone";
@@ -45,11 +45,21 @@ export const metadata: Metadata = {
     siteName: "NotifyMe",
     type: "website",
     locale: "en_US",
+    images: [SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: TITLE,
     description: DESCRIPTION,
+    images: [SOCIAL_IMAGE.url],
+  },
+  icons: {
+    icon: [
+      { url: "/icon.png", sizes: "64x64", type: "image/png" },
+      { url: "/notifyme-icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/notifyme-icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   robots: {
     index: true,

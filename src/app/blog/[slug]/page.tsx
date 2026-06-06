@@ -5,6 +5,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { getAllSlugs, getPost, formatDate } from "@/lib/blog";
+import { SOCIAL_IMAGE } from "@/lib/site";
 
 type Params = { slug: string };
 
@@ -29,9 +30,13 @@ export async function generateMetadata({
       type: "article",
       publishedTime: post.date,
       url: `/blog/${slug}`,
-      // Explicit so the shared retro-pager card survives the openGraph override
-      // (a route-level openGraph object suppresses the file-based image merge).
-      images: ["/opengraph-image"],
+      images: [SOCIAL_IMAGE],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [SOCIAL_IMAGE.url],
     },
     alternates: { canonical: `/blog/${slug}` },
   };

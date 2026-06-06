@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { getAllPosts, formatDate } from "@/lib/blog";
+import { SOCIAL_IMAGE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -14,7 +15,14 @@ export const metadata: Metadata = {
       "Guides for wiring NotifyMe into your developer and AI-agent workflows.",
     type: "website",
     url: "/blog",
-    images: ["/opengraph-image"],
+    images: [SOCIAL_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NotifyMe Blog",
+    description:
+      "Guides for wiring NotifyMe into your developer and AI-agent workflows.",
+    images: [SOCIAL_IMAGE.url],
   },
   alternates: { canonical: "/blog" },
 };

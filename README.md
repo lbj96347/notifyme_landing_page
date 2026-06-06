@@ -140,13 +140,15 @@ The blog index and static blog post routes are generated from these files.
 
 ## Deployment
 
-The project is ready for Vercel deployment. Before publishing, update the canonical site origin in:
+The project is ready for Vercel deployment. Set the production origin so
+metadata, sitemap, robots, and social images use crawlable absolute URLs:
 
 ```text
-src/lib/site.ts
+NEXT_PUBLIC_SITE_URL=https://your-production-domain.com
 ```
 
-Replace `SITE_URL` with the production domain so metadata, sitemap, robots, and social images use the correct absolute URL.
+On Vercel, `VERCEL_PROJECT_PRODUCTION_URL` is also used as a fallback. Local
+development falls back to `http://localhost:3003`.
 
 ## Product Positioning
 

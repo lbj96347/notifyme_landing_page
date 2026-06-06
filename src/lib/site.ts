@@ -3,8 +3,20 @@
 // changes, update these snippets in lockstep.
 
 // Canonical production origin. Used for metadataBase, sitemap, robots, and
-// absolute OpenGraph/Twitter URLs. Update when the real domain is registered.
-export const SITE_URL = "https://notifyme.example";
+// absolute OpenGraph/Twitter URLs.
+const vercelProductionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : undefined;
+
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? vercelProductionUrl ?? "http://localhost:3003";
+
+export const SOCIAL_IMAGE = {
+  url: "/notifyme-icon-1024.png",
+  width: 1024,
+  height: 1024,
+  alt: "NotifyMe app icon",
+} as const;
 
 export const GITHUB_URL = "https://github.com/lbj96347/notifyme";
 export const DOCS_URL = "https://github.com/lbj96347/notifyme#quick-start";
